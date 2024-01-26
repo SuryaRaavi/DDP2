@@ -1,0 +1,106 @@
+import javax.swing.JOptionPane;
+
+public class NumberConverter {
+    public static void main(String[] args) {
+
+        String inputString, resultString;
+
+        boolean valid = true;
+        boolean keepGoing = true;
+        long decLong = 0;
+
+        while (keepGoing) {
+            inputString = JOptionPane.showInputDialog(
+                null,
+                "Please enter a positive decimal integer <= " 
+                + Integer.MAX_VALUE + " or QUIT to quit:",
+                "Number Converter",
+                JOptionPane.PLAIN_MESSAGE
+            );
+
+            // validate
+
+            // if want to quit
+            if (inputString.equalsIgnoreCase("quit")) {
+                keepGoing = false;
+                break;
+            }
+
+            // if contains non numeric
+            for (int i = 0; i < inputString.length(); i++) {
+                if (!Character.isDigit(inputString.charAt(i))) {
+                    valid = false;
+                    System.out.println(inputString.charAt(i));
+                    break;
+                }
+            }
+            
+            if (valid) {
+                // if empty string
+                if (inputString.equals("")) {
+                    valid = false;
+                // if numbers to big
+                } else if (inputString.length() > Integer.toString(Integer.MAX_VALUE).length()) {
+                    valid = false;
+                // if more than max value
+                } else if (Long.parseLong(inputString) > Integer.MAX_VALUE) {
+                    valid = false;
+                // if not positive
+                } else if (Long.parseLong(inputString) <= 0) {
+                    valid = false;
+                }
+            }
+
+            if (valid) {
+                decLong = Long.parseLong(inputString);
+                int decInt  = (int) decLong;
+                resultString = "The hex number for decimal number " + decLong + " is:\n" + int2hex(decInt);
+            } else {
+                resultString = "Wrong input.";
+            }
+
+            JOptionPane.showMessageDialog(
+                null, 
+                resultString, 
+                "Number Converter",
+                JOptionPane.PLAIN_MESSAGE
+            );
+
+            valid = true;
+        }
+    }
+
+    public static String int2hex(int decInt) {
+        
+        if (decInt == 0) return "";
+        
+        String hexStr = "";
+        int mod = decInt % 16;
+
+        switch(mod) {
+            case 15:
+                hexStr = "F";
+                break;
+            case 14:
+                hexStr = "E";
+                break;
+            case 13:
+                hexStr = "D";
+                break;
+            case 12:
+                hexStr = "C";
+                break;
+            case 11:
+                hexStr = "B";
+                break;
+            case 10:
+                hexStr = "A";
+                break;
+            
+            default:
+                hexStr = Integer.toString(mod);
+        }
+        
+        return int2hex(decInt / 16) + hexStr;
+    }
+}
